@@ -1,0 +1,22 @@
+
+# primary parameters
+omega    0.300
+lambda   0.700
+weos     -1.000
+hubble   0.700
+zl       0.500
+prefix   out
+xmin     -10.000
+ymin     -10.000
+xmax     10.000
+ymax     10.000
+pix_ext  0.200
+pix_poi  3.000
+maxlev   6
+startup 1 1 0
+lens sie 200.000 0.000 0.000 0.300 30.000 0.010 0.000
+point 5.000 0.500 0.400
+end_startup
+start_command
+findimg
+quit
