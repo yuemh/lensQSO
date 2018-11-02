@@ -1,0 +1,80 @@
+from __init__ import *
+import numpy as np
+import os
+from astropy.io import fits
+from astropy.cosmology import FlatLambdaCDM
+import astropy.units as u
+import astropy.constants as const
+import pandas as pd
+import matplotlib.pyplot as plt
+import mylib.spec_measurement as spec
+
+defaultcosmo = FlatLambdaCDM(H0=70, Om0=0.3)
+
+
+def FP_sigma(mag, re, redshift, kcorr, kpcsep):
+    # surface brightness
+
+    mu = mag + 2.5 * np.log10 (2 * np.pi * re**2) - 10 * np.log10(1+redshift) \
+            - kcorr
+    print('mu', mu)
+
+    logRe = np.log10(re / kpcsep / 0.7)
+
+    a, b, c = 1.52, -0.78, -8.895
+
+    logsigma = (logRe + b*mu/2.5 - c)/a
+
+    return 10**logsigma
+
+
+def read_template(key=-1):
+
+    template_df = pd.read_csv(\
+                dir_data + '/GalaxySED/elliptical.csv')
+
+    if key<0 or key>(len(template_df)-1):
+        key = np.random.randint(0, len(template_df)-1)[0]
+
+    template_name = str(template_df['Name'][key])
+    template_file = dir_data + '/GalaxySED/%s_spec.dat'%(template_name)
+    template_data = np.loadtxt(template_file)
+    wave, flux, _, _ = template_data.T
+
+    spec_gal = spec.Spectrum(wave, flux, mode='ABS')
+    return spec_gal
+
+
+def galaxy_paras(Mabs, re, redshift, tempkey, ellip, pa, filt,\
+                std_filt=spec.read_filter('SDSS','SDSSi')):
+
+    tempspec = read_template(tempkey)
+    tempspec.normalize(std_filt, Mabs)
+
+    mapp = tempspec.magnitude(filt) + defaultcosmo.distmod(redshift)
+
+    template.to_obs(redshift)
+    mapp_kcorr = template.magnitude(filt)
+
+    sigma = FP_sigma(mapp, re, redshift, kcorr=0)
+
+def quasar_paras(Mabs, redshift, filt, std_wavelength):
+
+
+
+def main():
+    redshift = 0.5
+    angu_dist = float(defaultcosmo.angular_diameter_distance(redshift) / u.kpc)
+    kpcsep = 1./angu_dist * 206265.
+    distmod = defaultcosmo.distmod(redshift) / u.mag
+    mag = -23 + distmod
+    print('mag', mag)
+    re = 5.* kpcsep
+    print('re', re)
+
+    kcorr = 0
+
+    print(np.log10(FP_sigma(mag, re, redshift, kcorr, kpcsep)))
+
+if __name__=='__main__':
+    main()

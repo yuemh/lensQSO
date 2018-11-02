@@ -1,0 +1,23 @@
+
+# primary parameters
+omega    0.300
+lambda   0.700
+weos     -1.000
+hubble   0.700
+zl       0.500
+prefix   lens
+xmin     -5.000
+ymin     -5.000
+xmax     5.000
+ymax     5.000
+pix_ext  0.250
+pix_poi  0.250
+maxlev   6
+psfconv_size  2.0
+startup 0 1 0
+extend point 4.000 39033146.248 0.300 0.400                        0.000 0.000 0.000 0.000
+psf 1.110 0.000 0.000 4.000 1.110 0.000 0.000 4.000 1.000
+end_startup
+start_command
+writeimage 37667.702358 0.000000
+quit

@@ -32,8 +32,9 @@ def skybright_to_background(skybright, Filter, Aeff, texp, pixscale):
     return float(skycount)
 
 def maglim_to_background(maglim, Filter, Aeff, texp, FWHM, pixscale):
-    N_pix = np.pi * (FWHM/2)**2 / pixscale**2
+    N_pix = np.pi * (FWHM)**2 / pixscale**2
     counts = mag_to_counts(maglim, Filter, Aeff, texp)
+    print(counts)
     sigma = counts / 5
     bkg = sigma ** 2 / N_pix
 
@@ -63,7 +64,8 @@ class _survey(object):
             raise UnknownFilterError('Survey %s does not have filter %s'\
                                     %(self.name, filt))
         filtobj = spec.read_filter(self.filter_key, filt)
-        counts = mag_to_counts(mag, filtobj, self.Aeff, self.texp[filt])
+        texp = self.texp[filt] * self.visits[filt]
+        counts = mag_to_counts(mag, filtobj, self.Aeff, texp)
         return counts
 
     def noisyimg(self, filt, image):

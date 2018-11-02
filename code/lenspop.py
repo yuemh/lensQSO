@@ -33,12 +33,13 @@ def sim_a_lens(source_z, sourceinfo, lens_z, lensinfo, lensmassinfo,\
     filt: str
     """
     if not 'psfinfo' in kwargs.keys():
-        psf1 = [survey.FWHM[filt], 0, 0, 4]
+        psf1 = [survey.FWHM[filt], 0, 0, 3]
         psfinfo = [psf1, psf1, 1]
 
     for source in sourceinfo:
         sourcemag = source['Mag']
         sourceflux = survey.getcounts(filt, sourcemag)
+        print(sourceflux)
         source['flux'] = sourceflux
 
     for lenslight in lensinfo:
@@ -73,11 +74,16 @@ def sim_a_lens(source_z, sourceinfo, lens_z, lensinfo, lensmassinfo,\
 
 def main():
 
-    sourceinfo = [{'Type':'point', 'Mag':22.1, 'x_center':0.3, 'y_center':0.4}]
-    lensinfo = [{'Type':'sersic', 'Mag':20, 'x_center':0, 'y_center':0,\
+    sourceinfo = [{'Type':'point', 'Mag':22.3, 'x_center':0., 'y_center':0.}]
+    lensinfo = [{'Type':'sersic', 'Mag':30, 'x_center':0, 'y_center':0,\
                  'ellipticity':0.3, 'pa':30., 're':0.5, 'n':1}]
     lensmassinfo = [{'Type':'sie', 'sigma':200, 'x_center':0, 'y_center':0,\
                      'ellipticity':0.3, 'pa':30., 'r_core':1e-2}]
+
+    emptylens = True
+    if emptylens:
+#        lensinfo = []
+        lensmassinfo = []
 
     PSsurvey = surveys.PanStarrsSurvey()
     filt = 'PSi'

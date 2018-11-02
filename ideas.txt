@@ -1,0 +1,5 @@
+Features that we can use:
+
+1. Optical-NIR photometry
+2. Morphology
+3. 

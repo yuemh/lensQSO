@@ -271,7 +271,7 @@ maxlev   6
         f.close()
 
         os.system(glafic_exe + ' %s/%s'%(dir_exe, tmp_input_file))
-        os.system('rm %s/%s'%(dir_exe, tmp_input_file))
+#        os.system('rm %s/%s'%(dir_exe, tmp_input_file))
 
     def sim_image(self, prefix, x_range, y_range, psfinfo, pix_ext, pix_poi,\
                   output, newrun_source=True, newrun_lens=True,\
