@@ -63,9 +63,11 @@ def sim_a_lens(source_z, sourceinfo, lens_z, lensinfo, lensmassinfo,\
 
     hdulist = fits.open(output)
     rawimg = hdulist[3].data
-    noisyimg = survey.noisyimg(filt, rawimg)
+    noisyimg, noise = survey.noisyimg(filt, rawimg)
     noisyhdu = fits.ImageHDU(noisyimg, name='NOISY')
     hdulist.append(noisyhdu)
+    sigmahdu = fits.ImageHDU(noise, name='SIGMA')
+    hdulist.append(sigmahdu)
 
     hdulist.writeto(noisy_output, overwrite=True)
 
@@ -80,7 +82,7 @@ def main():
     lensmassinfo = [{'Type':'sie', 'sigma':200, 'x_center':0, 'y_center':0,\
                      'ellipticity':0.3, 'pa':30., 'r_core':1e-2}]
 
-    emptylens = True
+    emptylens = False
     if emptylens:
 #        lensinfo = []
         lensmassinfo = []

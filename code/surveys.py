@@ -72,9 +72,11 @@ class _survey(object):
         RN = self.readnoise
         nexp = self.visits[filt]
 
+        noise = np.sqrt(image + RN**2*nexp)
+
         noisyimg = np.random.poisson(image)\
                 + np.random.normal(scale=RN*np.sqrt(nexp))
-        return noisyimg
+        return (noisyimg, noise)
 
 
 class PanStarrsSurvey(_survey):
@@ -93,7 +95,20 @@ class PanStarrsSurvey(_survey):
                        'PSz':30, 'PSy':30}
         self.visits = {'PSg':10, 'PSr':12, 'PSi':17,\
                        'PSz':11, 'PSy':12}
+        '''
+        # calculate the zeropoints
+        m0flux_PSg = self.getcounts('PSg', 0)
+        m0flux_PSr = self.getcounts('PSr', 0)
+        m0flux_PSi = self.getcounts('PSi', 0)
+        m0flux_PSz = self.getcounts('PSz', 0)
+        m0flux_PSy = self.getcounts('PSy', 0)
 
+        self.zeropoint = {'PSg': 2.5 * np.log10(m0flux_PSg),\
+                          'PSr': 2.5 * np.log10(m0flux_PSr),\
+                          'PSi': 2.5 * np.log10(m0flux_PSi),\
+                          'PSz': 2.5 * np.log10(m0flux_PSz),\
+                          'PSy': 2.5 * np.log10(m0flux_PSy)}
+        '''
 
 class WISESurvey(_survey):
     def getinfo(self):
